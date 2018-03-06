@@ -1,0 +1,12 @@
+{
+    "name": "userprovider/model-provider",
+    "description": "Package for manage user data",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "UserProvider\\": "src/"
+        }
+    }
+}
