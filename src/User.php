@@ -155,46 +155,4 @@ class User extends Base
 
         return $this->manageResponse($this->curl, $this->serviceName);
     }
-
-    //Method for manage response
-    protected function manageResponse($curl, $serviceName)
-    {
-        //Define output
-        $result = [
-            'success' => true,
-            'message' => '',
-            'data'    => [],
-        ];
-
-        $response = $curl->response;
-
-        if (empty($response)) {
-            $result['success'] = false;
-            $result['message'] = str_replace('[servicename]', $serviceName, $this->messages['serverError']);
-            return $result;
-        }
-
-        $body = json_decode($response, true);
-
-        if ($curl->http_status_code != 200) {
-            $result['success'] = false;
-            if (isset($body['message'])) {
-                $result['message'] = $body['message'];
-                return $result;
-            }
-
-            if (!empty($body['errors']) && isset($body['errors'][0]) && $body['errors'][0]['code'] != 200 && isset($body['errors'][0]['detail'])) {
-                $result['message'] = $body['errors'][0]['detail'];
-                return $result;
-            }
-
-            $result['message'] = str_replace('[servicename]', $serviceName, $this->messages['serverError']);
-
-        } else {
-            //success
-            $result['data'] = $body['data'];
-        }
-
-        return $result;
-    }
 }
