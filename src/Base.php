@@ -8,11 +8,13 @@ class Base
 {
 	protected $curl;
 	protected $messages;
+    public $helps;
 
 	public function __construct()
 	{
 		define('BASE_DIR', dirname(__DIR__));
 		$this->messages = include BASE_DIR . '/config/messages.php';
+        $this->helps    = include BASE_DIR . '/config/help.php';
 	}
 
 	protected function setCurl($url)
