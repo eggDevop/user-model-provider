@@ -29,8 +29,8 @@ class Base
         $errorMsg = '';
 
         foreach ($errors as $error) {
+            $eachMsg = '';
             if (isset($error['source']) && !empty($error['source'])) {
-                $eachMsg = '';
                 foreach ($error['source'] as $source) {
                     if (!empty($eachMsg)) $eachMsg .= ',';    
                     $eachMsg .= $source['msgError'];
