@@ -35,7 +35,7 @@ class Base
                     if (!empty($eachMsg)) $eachMsg .= ',';    
                     $eachMsg .= $source['msgError'];
                 }
-                $eachMsg = "({$eachMsg})";
+                $eachMsg = $error['detail'].": ({$eachMsg})";
             }
             if (!empty($errorMsg)) $errorMsg .= '|';    
             $errorMsg .= $eachMsg;
