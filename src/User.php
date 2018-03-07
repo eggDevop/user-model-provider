@@ -7,11 +7,13 @@ use UserProvider\Base;
 /**
  * @SWG\Definition(definition="Author", type="object", required={"name"})
  */
-class User extends Base {
+class User extends Base
+{
+    private $configs;
     private $serviceName = 'user';
 
     public $helps = [
-        'method_list' => ['login', 'createUser'],
+        'method_list' => ['login', 'getUserList', 'createUser', 'updateUser', 'deleteUser'],
         'login' => [
             'params' => [
                 'username' => 'required',
@@ -30,15 +32,17 @@ class User extends Base {
         ],
         'getUserList' => [
             'params' => [],
-            'output' => [[
-                'attributes.username'   => 'Username',
-                'attributes.ref_type'   => 'Reference Type',
-                'attributes.ref_id'     => 'Reference ID',
-                'attributes.status'     => 'User Status',
-                'attributes.created_at' => 'Create date time',
-                'attributes.updated_at' => 'Update date time',
-                'id'                    => 'User ID',
-            ]]
+            'output' => [
+                [
+                    'attributes.username'   => 'Username',
+                    'attributes.ref_type'   => 'Reference Type',
+                    'attributes.ref_id'     => 'Reference ID',
+                    'attributes.status'     => 'User Status',
+                    'attributes.created_at' => 'Create date time',
+                    'attributes.updated_at' => 'Update date time',
+                    'id'                    => 'User ID',
+                ]
+            ]
         ],
         'createUser' => [
             'params' => [
@@ -93,9 +97,10 @@ class User extends Base {
     //     'create' => 'users',
     // ];
 
-    public function __construct($configs) {
+    public function __construct($configs = null)
+    {
 
-        if (!enpty($configs)) {
+        if (!empty($configs)) {
             $this->configs = $configs;
         } else {
             $this->configs = [
@@ -107,52 +112,52 @@ class User extends Base {
 
         //set curl
         $this->setCurl($this->configs['url']);
-        
-    } 
+
+    }
 
     public function login($params)
     {
-        $this->curl->post($this->config['login'], $params);
+        $this->curl->post($this->configs['login'], $params);
 
-        return $this->manageResponse($this->curl->response, $this->serviceName);
+        return $this->manageResponse($this->curl, $this->serviceName);
     }
 
     public function getUserList($params)
     {
-        $this->curl->get($this->config['list'], $params);
+        $this->curl->get($this->configs['list'], $params);
 
-        return $this->manageResponse($this->curl->response, $this->serviceName);
+        return $this->manageResponse($this->curl, $this->serviceName);
     }
 
     public function createUser($params)
     {
-        $this->curl->post($this->config['create'], $params);
+        $this->curl->post($this->configs['create'], $params);
 
-        return $this->manageResponse($this->curl->response, $this->serviceName);
+        return $this->manageResponse($this->curl, $this->serviceName);
     }
 
     public function updateUser($params)
     {
         //complete uri
-        $uri = str_replace('[id]', $params['id'], $this->config['update']);
+        $uri = str_replace('[id]', $params['id'], $this->configs['update']);
 
         $this->curl->put($uri, $params);
 
-        return $this->manageResponse($this->curl->response, $this->serviceName);
+        return $this->manageResponse($this->curl, $this->serviceName);
     }
 
     public function deleteUser($params)
     {
         //complete uri
-        $uri = str_replace('[id]', $params['id'], $this->config['delete']);
+        $uri = str_replace('[id]', $params['id'], $this->configs['delete']);
 
         $this->curl->delete($uri, $params);
 
-        return $this->manageResponse($this->curl->response, $this->serviceName);
+        return $this->manageResponse($this->curl, $this->serviceName);
     }
 
     //Method for manage response
-    protected function manageResponse($response, $serviceName)
+    protected function manageResponse($curl, $serviceName)
     {
         //Define output
         $result = [
@@ -161,24 +166,26 @@ class User extends Base {
             'data'    => [],
         ];
 
+        $response = $curl->response;
+
         if (empty($response)) {
             $result['success'] = false;
             $result['message'] = str_replace('[servicename]', $serviceName, $this->messages['serverError']);
             return $result;
         }
 
-        $body = json_decode($response->body, true);       
+        $body = json_decode($response, true);
 
-        if ($response->header->statusCode != 200) {
+        if ($curl->http_status_code != 200) {
             $result['success'] = false;
             if (isset($body['message'])) {
                 $result['message'] = $body['message'];
-                return $result; 
+                return $result;
             }
 
-            if (isset($body['errors']) && $body['errors']['code'] != 200 && isset($body['errors']['detail'])) {
-                $result['message'] = $body['errors']['detail'];
-                return $result; 
+            if (!empty($body['errors']) && isset($body['errors'][0]) && $body['errors'][0]['code'] != 200 && isset($body['errors'][0]['detail'])) {
+                $result['message'] = $body['errors'][0]['detail'];
+                return $result;
             }
 
             $result['message'] = str_replace('[servicename]', $serviceName, $this->messages['serverError']);
@@ -187,8 +194,7 @@ class User extends Base {
             //success
             $result['data'] = $body['data'];
         }
-        
+
         return $result;
     }
-    
 }
