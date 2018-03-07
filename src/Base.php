@@ -45,7 +45,7 @@ class Base
     }
 
 	//Method for manage response
-    protected function manageResponse($curl, $serviceName)
+    protected function manageResponse($curl, $serviceName, $successCode=200)
     {
         //Define output
         $result = [
@@ -64,7 +64,7 @@ class Base
 
         $body = json_decode($response, true);
 
-        if ($curl->http_status_code != 200) {
+        if ($curl->http_status_code != $successCode) {
             $result['success'] = false;
             if (isset($body['message'])) {
                 $result['message'] = $body['message'];
