@@ -51,6 +51,16 @@ class User extends Base
         return $this->manageResponse($this->curl, $this->serviceName);
     }
 
+    public function getUserDetail($params)
+    {
+        //complete uri
+        $uri = str_replace('[id]', $params['id'], $this->configs['detail']);
+
+        $this->curl->get($uri, $params);
+
+        return $this->manageResponse($this->curl, $this->serviceName);
+    }
+
     public function createUser($params)
     {
         $this->curl->post($this->configs['create'], $params);
@@ -74,6 +84,16 @@ class User extends Base
         $uri = str_replace('[id]', $params['id'], $this->configs['delete']);
 
         $this->curl->delete($uri, $params);
+
+        return $this->manageResponse($this->curl, $this->serviceName);
+    }
+
+    public function changePassword($params)
+    {
+        //complete uri
+        $uri = str_replace('[id]', $params['id'], $this->configs['change_password']);
+
+        $this->curl->put($uri, $params);
 
         return $this->manageResponse($this->curl, $this->serviceName);
     }
