@@ -98,8 +98,8 @@ return [
     ],
     'changePassword' => [
         'params' => [
-            'old' => 'required'
-            'new' => 'required'
+            'old' => 'required',
+            'new' => 'required',
         ],
         'output' => [
             'attributes.username'   => 'Username',
