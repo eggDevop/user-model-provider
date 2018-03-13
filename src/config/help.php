@@ -112,13 +112,15 @@ return [
         ]
     ],
     'configs' => [
-        'url'             => 'http://ms-user-api.develop/',
-        'login'           => 'users/login',
-        'list'            => 'users',
-        'detail'          => 'users/[id]',
-        'create'          => 'users',
-        'update'          => 'users/[id]',
-        'delete'          => 'users/[id]',
-        'change_password' => 'users/[id]/change/password',
+        'user' => [
+            'url'             => 'http://ms-user-api.develop/',
+            'login'           => 'users/login',
+            'list'            => 'users',
+            'detail'          => 'users/[id]',
+            'create'          => 'users',
+            'update'          => 'users/[id]',
+            'delete'          => 'users/[id]',
+            'change_password' => 'users/[id]/change/password',
+        ],
     ]
 ];
