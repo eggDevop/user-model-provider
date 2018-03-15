@@ -80,7 +80,7 @@ class Base
 
         } else {
             //success
-            $result['data'] = $body['data'];
+            $result = array_merge($result, $body);
         }
 
         return $result;
