@@ -1,5 +1,5 @@
 {
-    "name": "eggdigital/user-model-provider",
+    "name": "eggdevops/user-model-provider",
     "description": "Package for manage user data",
     "type": "library",
     "license": "Apache-2.0",
