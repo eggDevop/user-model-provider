@@ -1,28 +1,27 @@
 <?php
 
-namespace UserProvider;
+namespace RoleProvider;
 
-use UserProvider\Core\Curl;
+use RoleProvider\Core\Curl;
 
 class Base
 {
-	protected $curl;
-	protected $messages;
+ protected $curl;
+ protected $messages;
     public $helps;
 
-	public function __construct()
-	{
-        if (!defined('BASE_DIR')) define('BASE_DIR', dirname(__DIR__) . '/src');
-		$this->messages = include BASE_DIR . '/config/messages.php';
-        $this->helps    = include BASE_DIR . '/config/help.php';
-	}
+ public function __construct()
+ {
+  $this->messages = dirname(__DIR__) . '/src/config/messages.php';
+        $this->helps    = dirname(__DIR__) . '/src/config/help.php';
+ }
 
-	protected function setCurl($url)
-	{
-		$this->curl = new Curl($url);
-	}
+ protected function setCurl($url)
+ {
+  $this->curl = new Curl($url);
+ }
 
-	//Method for manage erroe message
+ //Method for manage erroe message
     protected function manageErrroMessage($errors)
     {
         //Define output
@@ -36,6 +35,8 @@ class Base
                     $eachMsg .= $source['msgError'];
                 }
                 $eachMsg = $error['detail'].": ({$eachMsg})";
+            } else {
+                $eachMsg = $error['detail'];
             }
             if (!empty($errorMsg)) $errorMsg .= '|';    
             $errorMsg .= $eachMsg;
@@ -44,7 +45,7 @@ class Base
        
     }
 
-	//Method for manage response
+ //Method for manage response
     protected function manageResponse($curl, $serviceName, $successCode=200)
     {
         //Define output
